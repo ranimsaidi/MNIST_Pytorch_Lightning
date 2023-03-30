@@ -71,8 +71,8 @@ train_ds, val_ds = random_split(entire_dataset, [50000, 10000])
 test_ds = datasets.MNIST(
     root="dataset/", train=False, transform=transforms.ToTensor(), download=True
 )
-train_loader = DataLoader(dataset=train_ds, batch_size=batch_size, shuffle=True)
-val_loader = DataLoader(dataset=val_ds, batch_size=batch_size, shuffle=True)
+train_loader = DataLoader(dataset=train_ds, batch_size=batch_size, shuffle=False)
+val_loader = DataLoader(dataset=val_ds, batch_size=batch_size, shuffle=False)
 test_loader = DataLoader(dataset=test_ds, batch_size=batch_size, shuffle=False)
 
 # Initialize network
@@ -82,8 +82,10 @@ model = NN(input_size=input_size,num_classes= num_classes).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-trainer=pl.Trainer(min_epochs=2,max_epochs=3)
+trainer=pl.Trainer(min_epochs=1,max_epochs=1)
 trainer.fit(model,train_loader,val_loader)
+trainer.validate(model,dataloaders=val_loader)
+#trainer.test(dataloaders=test_loader)
 
 
 
